@@ -25,8 +25,8 @@ Last-Modified
 ETag
 
 * 조건부 요청 헤더 : 각각 해당 검증헤더를 가진 응답이, 조건에 따라 분기된다
-If-Modified-Since
-If-None-Match
+If-Modified-Since (<=> If-Unmodified-Since)
+If-None-Match (<=> If-Match)
 
 * 개괄적인 절차
 요청 [If-Modified-Since] = 내 캐시에 있는 시간정보 이후로 데이터가 수정됐으면 새로알려줘
@@ -45,7 +45,7 @@ ex> 01분 : 클라이언트가 받은 캐시용 데이터의 ETag: "aaa"
 10분 : 서버에서 데이터가 원래대로 바뀜 ETag: "aaa"
 11분 : 클라이언트가 재요청
 ㄴ Last-Modified를 썼었다면 갱신날짜가 다르므로 같은 자료임에도 쌩 불러오기
-ㄴ ETag 방식을 사용하고, 서버가 캐시데이터들의 버전관리만 잘한다면 용량 절약
+ㄴ ETag 방식을 사용하고, 서버가 캐시데이터들의 버전관리만 잘한다면 전송용량 절약
  
 * 요청 [If-None-Match] = 내 캐시에 있는 해시정보와 다르면 새로알려줘
 
@@ -54,3 +54,24 @@ ex> 01분 : 클라이언트가 받은 캐시용 데이터의 ETag: "aaa"
 * 캐시 제어 헤더
 [Cache-Control: max-age] 캐시 유효시간을 초단위로
 [Cache-Control: no-cache] 데이터를 캐시하되, 항상 ORIGIN 서버에 검증하고 사용
+[Cache-Control: no-store] 민감정보 데이터 - 사용후 메모리에서 최대한 빨리 삭제
+
+
+<프록시 캐시>
+[그림 8c]
+[Cache-Control: public] 응답이 public 캐시에 저장돼도 됨
+[Cache-Control: private] (기본값) 응답이 특정 사용자를 위한 것 (로그인 후 보는 자료 등)
+
+
+<캐시 무효화>
+- 개발자가 지정한 부분만 캐시되는게 아니라, 브라우저 등에서 학습적으로 캐시를 적용해버리는 경우가 있다
+- 확실히 캐시를 쓰면 안되는 부분을 지정해줄 필요성
+[Cache-Control: no-cache] 데이터를 캐시하되, 항상 ORIGIN 서버에 검증하고 사용
+[Cache-Control: no-store] 민감정보 데이터 - 사용후 메모리에서 최대한 빨리 삭제
+
+[Pragma: no-cache] HTTP 1.0 하위호환
+
+[Cache-Control: must-revalidate]
+- no-cache는 설정에 따라 프록시 캐시 서버가 응답을 해줄수도 있다 (프록시-오리진 간 일시 통신오류라던지)
+- 금융정보 등 무조건 오리진과 검증이 필요하면 이 설정을 무효화할수 있어야 한다
+- 같은 상황에서 이 헤더를 가졌다면, 504 Gateway Timeout이 반환될 것
