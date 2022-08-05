@@ -1,0 +1,8 @@
+<URI>
+* Uniform Resource Identifier
+* URL(Locator), URN(Name)을 포괄하는 개념
+* 99.999 url을 쓰니까 urn도 있고 uri의 개념이라는 정도만 알아둘것
+* https://www.google.com:443/search?q=hello&hl=ko
+ㄴ> 물음표 이후로 쿼리임 : ?keyA=valueA&keyB=valueB
+ㄴ> query parameter, query string 이라고 부름
+ㄴ> #내부북마크 : 쿼리까지 다 찍고 그 뒤로 붙음
